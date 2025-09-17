@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 /* ---------- Tipos ---------- */
 type Pregunta = { id: number; texto: string };
@@ -11,20 +11,20 @@ type Rango = {
   detail: string;
 };
 
-/* ---------- Preguntas ---------- */
+/* ---------- Preguntas (KOP) ---------- */
 const preguntas: Pregunta[] = [
-  { id: 1, texto: "¿Recibes reportes de puntualidad por ruta y unidad con indicadores claros?" },
-  { id: 2, texto: "¿Tu proveedor garantiza al menos un 95% de cumplimiento en horarios?" },
-  { id: 3, texto: "¿Tus empleados viajan en unidades recientes, con clima y mantenimiento preventivo al día?" },
-  { id: 4, texto: "¿Los choferes cuentan con capacitación en manejo defensivo y protocolos de seguridad?" },
-  { id: 5, texto: "¿Las unidades ofrecen comodidad suficiente para llegadas con buen ánimo y energía?" },
-  { id: 6, texto: "¿El proveedor entiende que el transporte influye en la rotación y el compromiso del personal?" },
-  { id: 7, texto: "Si falla una unidad, ¿recibes reposición inmediata?" },
-  { id: 8, texto: "¿Existen protocolos probados para incidentes en ruta o bloqueos?" },
-  { id: 9, texto: "¿Puedes contactar a más de una persona responsable en caso de incidencia?" },
-  { id: 10, texto: "¿Hay tres niveles de escalación (operador, coordinador, dirección) para resolver rápido?" },
-  { id: 11, texto: "¿Cuentas con acceso a monitoreo en tiempo real de tus unidades?" },
-  { id: 12, texto: "¿Puedes saber quién subió y quién no al inicio del turno?" },
+  { id: 1, texto: "¿Tienes un proceso documentado de contención inicial (< 60 min) con segregación y etiquetado de producto sospechoso?" },
+  { id: 2, texto: "¿Cuentas con personal de inspección/residentes disponible 24/7 para picos, lanzamientos o eventos no planificados?" },
+  { id: 3, texto: "¿Tu proveedor garantiza asistencia y puntualidad mediante transporte propio o esquemas de respaldo?" },
+  { id: 4, texto: "¿Operas sorting 100% y retrabajos con instrucciones aprobadas, muestras/fotos y trazabilidad por lote/turno?" },
+  { id: 5, texto: "¿Tienes residente de calidad con reporte diario (hallazgos, PPM, scrap/horas, costos) y comunicación con áreas clave?" },
+  { id: 6, texto: "¿Gestionas envío controlado (CSL1/CSL2) con criterios claros de entrada/salida y evidencia de cumplimiento?" },
+  { id: 7, texto: "¿Tu tiempo de reacción desde el aviso hasta presencia en línea es < 60 minutos en promedio?" },
+  { id: 8, texto: "¿El personal cuenta con entrenamiento y validación de habilidades (gages, ESD, seguridad, poka-yokes)?" },
+  { id: 9, texto: "¿Los retrabajos/ensamble controlado se realizan con herramientas/jigs validados, registros de torque/calibración y FTQ antes de liberar?" },
+  { id: 10, texto: "¿Existe escalamiento 24/7 con niveles (operativo, supervisor, gerencia) y SLAs/SLTs de respuesta definidos?" },
+  { id: 11, texto: "¿Tu proveedor propone mejoras (reducción de PPM/costos) y da seguimiento hasta validar la efectividad?" },
+  { id: 12, texto: "¿Cuentas con REPSE vigente, ISO 9001 y cumplimiento de requisitos del cliente (inducción, EHS, NDA, acceso)?" },
 ];
 
 /* ---------- Textos por rango ---------- */
@@ -33,294 +33,179 @@ const textos: Record<"bajo" | "medio" | "alto", Rango> = {
     badge: "Muy pobre",
     tono: "text-red-700",
     bg: "bg-red-50",
-    heading: "❌ Necesitas revisar tu servicio de transporte.",
+    heading: "Necesitas estabilizar tu soporte de calidad.",
     detail:
-      "Definitivamente hay incumplimientos recurrentes en puntualidad por ruta/unidad, cobertura de turnos, protocolos de contingencia y control operativo. " +
-      "Persistir con este nivel de servicio impacta el estado de ánimo desde el abordaje, reduce el desempeño en turno, eleva costos (horas extra, reprocesos) " +
-      "y expone a la empresa a riesgos de seguridad y reputacionales. Se requiere un plan inmediato de estabilización con responsables, métricas y fechas de cierre.",
+      "La evaluación evidencia brechas críticas en contención, tiempos de reacción y gobierno operativo. " +
+      "Recomendado: célula de contención 24/7, residente en planta, estándar de sorting/retrabajo con trazabilidad y escalamiento efectivo.",
   },
   medio: {
     badge: "Regular",
     tono: "text-amber-700",
     bg: "bg-amber-50",
-    heading: "⚠️ Hay cosas que mejorar.",
+    heading: "Hay brechas relevantes por cerrar.",
     detail:
-      "Hay evidentes brechas en confiabilidad operativa y control del servicio: puntualidad por ruta/unidad variable, cobertura incompleta y protocolos " +
-      "de contingencia poco robustos. Mantener estas brechas incrementa tardanzas y ausentismo, afecta el estado de ánimo desde el abordaje, reduce desempeño y eleva costos. " +
-      "Corregir de inmediato estabiliza el servicio y mejora la experiencia laboral desde el primer contacto del día.",
+      "Tienes práctica parcial. Formaliza tiempos de reacción, evidencia, trazabilidad y escalamiento; " +
+      "agrega propuesta de mejora con impacto en PPM/costos y valida efectividad.",
   },
   alto: {
     badge: "Sólido",
     tono: "text-emerald-700",
     bg: "bg-emerald-50",
-    heading: "🚍 Tienes un transporte de personal sólido.",
+    heading: "Soporte de calidad bien controlado.",
     detail:
-      "¡Felicidades! Tienes un nivel alto de cumplimiento en puntualidad por ruta, cobertura de turnos, protocolos de contingencia, " +
-      "mantenimiento y seguridad de unidades, además de esquemas claros de escalación y atención ejecutiva. La operación cuenta con trazabilidad y reportes " +
-      "suficientes para asegurar continuidad y mejora continua.",
+      "Mantén auditorías de proceso, revisa SLAs periódicamente y renueva entrenamientos/validaciones para sostener el nivel.",
   },
 } as const;
 
+/* ---------- Reglas de rango ---------- */
 function rango(total: number): Rango {
   if (total <= 11) return textos.bajo;
   if (total <= 18) return textos.medio;
   return textos.alto;
 }
 
-/* ---------- Panel del resultado ---------- */
+/* ---------- Utilidades ---------- */
 function ResultadoPanel({ data, total }: { data: Rango; total: number }) {
   return (
-    <section className={`rounded-2xl p-5 ${data.bg}`}>
-      <p className="text-sm font-semibold tracking-wide">
-        RESULTADO:{" "}
-        <span className="ml-2 inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold">
-          {data.badge}
-        </span>
-        <span className="ml-2 text-neutral-500">| Total: {total} / 24</span>
-      </p>
+    <section className={`mt-4 rounded-2xl p-5 ${data.bg}`}>
+      <div className="flex items-center justify-between">
+        <p className="text-sm font-semibold tracking-wide">
+          RESULTADO:{" "}
+          <span
+            className={`inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold ${data.tono}`}
+          >
+            {data.badge}
+          </span>
+        </p>
+        <p className="text-xs text-neutral-500">| Total: {total} / 24</p>
+      </div>
+
       <p className={`mt-3 font-bold ${data.tono}`}>{data.heading}</p>
       <p className="mt-2">{data.detail}</p>
     </section>
   );
 }
 
-/* ---------- Modal contacto + gate de resultado ---------- */
-function ModalContacto({
-  abierto,
-  onClose,
-  total,
-}: {
-  abierto: boolean;
-  onClose: () => void;
-  total: number;
-}) {
-  const datos = rango(total);
-
-  const [nombre, setNombre] = useState("");
-  const [puesto, setPuesto] = useState("");
-  const [empresa, setEmpresa] = useState("");
-  const [correo, setCorreo] = useState("");
-  const [celular, setCelular] = useState("");
-
-  const [enviando, setEnviando] = useState(false);
-  const [mostrando, setMostrando] = useState(false);
-  const [mensajeEnvio, setMensajeEnvio] = useState<null | { ok: boolean; text: string }>(null);
-
-  useEffect(() => {
-    if (!abierto) {
-      // reset al cerrar
-      setEnviando(false);
-      setMostrando(false);
-      setMensajeEnvio(null);
-      setNombre("");
-      setPuesto("");
-      setEmpresa("");
-      setCorreo("");
-      setCelular("");
-    }
-  }, [abierto]);
-
-  if (!abierto) return null;
-
-  async function verResultados() {
-    if (!nombre.trim() || !correo.trim()) {
-      alert("Nombre y correo son obligatorios.");
-      return;
-    }
-
-    // intentamos enviar, pero no bloqueamos la visualización del resultado
-    setEnviando(true);
-    try {
-      const resp = await fetch("/api/send", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          nombre: nombre.trim(),
-          puesto: puesto.trim(),
-          empresa: empresa.trim(),
-          correo: correo.trim(),
-          celular: celular.trim(),
-          total,
-        }),
-      });
-
-      const data = await resp.json().catch(() => ({}));
-      if (!resp.ok) {
-        setMensajeEnvio({
-          ok: false,
-          text:
-            typeof data?.error === "string"
-              ? data.error
-              : data?.error
-              ? JSON.stringify(data.error)
-              : "No se pudo enviar.",
-        });
-      } else {
-        setMensajeEnvio({ ok: true, text: "¡Datos enviados!" });
-      }
-    } catch (e: any) {
-      setMensajeEnvio({ ok: false, text: "No se pudo enviar." });
-    } finally {
-      setEnviando(false);
-      setMostrando(true); // mostramos el resultado pase lo que pase
-    }
-  }
-
-  return (
-    <>
-      <div className="fixed inset-0 z-40 bg-black/50" />
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-2xl rounded-2xl bg-white p-5 shadow-xl">
-          <div className="mb-3 flex items-center justify-between">
-            <h3 className="text-lg font-semibold">Resultado del diagnóstico</h3>
-            <button className="rounded p-2 hover:bg-neutral-100" onClick={onClose}>
-              ✕
-            </button>
-          </div>
-
-          {!mostrando && (
-            <>
-              <p className="text-sm text-neutral-600">
-                Completa tus datos para ver el resultado.
-              </p>
-
-              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div className="sm:col-span-2">
-                  <label className="text-sm">Nombre*</label>
-                  <input
-                    value={nombre}
-                    onChange={(e) => setNombre(e.target.value)}
-                    className="mt-1 w-full rounded-lg border p-2"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm">Puesto</label>
-                  <input
-                    value={puesto}
-                    onChange={(e) => setPuesto(e.target.value)}
-                    className="mt-1 w-full rounded-lg border p-2"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm">Empresa</label>
-                  <input
-                    value={empresa}
-                    onChange={(e) => setEmpresa(e.target.value)}
-                    className="mt-1 w-full rounded-lg border p-2"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm">Correo*</label>
-                  <input
-                    value={correo}
-                    onChange={(e) => setCorreo(e.target.value)}
-                    type="email"
-                    className="mt-1 w-full rounded-lg border p-2"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm">Celular</label>
-                  <input
-                    value={celular}
-                    onChange={(e) => setCelular(e.target.value)}
-                    className="mt-1 w-full rounded-lg border p-2"
-                  />
-                </div>
-              </div>
-
-              {mensajeEnvio && (
-                <p
-                  className={`mt-3 text-sm ${
-                    mensajeEnvio.ok ? "text-emerald-700" : "text-amber-700"
-                  }`}
-                >
-                  {mensajeEnvio.text}
-                </p>
-              )}
-
-              <div className="mt-6 flex justify-end gap-2">
-                <button className="rounded-xl bg-neutral-100 px-3 py-2" onClick={onClose}>
-                  Cerrar
-                </button>
-                <button
-                  className="rounded-xl bg-black px-3 py-2 text-white disabled:opacity-60"
-                  onClick={verResultados}
-                  disabled={enviando}
-                >
-                  {enviando ? "Enviando..." : "Ver resultados"}
-                </button>
-              </div>
-            </>
-          )}
-
-          {mostrando && (
-            <>
-              <ResultadoPanel data={datos} total={total} />
-              <div className="mt-6 flex justify-end">
-                <button className="rounded-xl bg-neutral-100 px-3 py-2" onClick={onClose}>
-                  Cerrar
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-    </>
-  );
-}
-
 /* ---------- App ---------- */
 export default function App() {
   const [respuestas, setRespuestas] = useState<Record<number, number | null>>({});
-  const [abrirModal, setAbrirModal] = useState(false);
-  const [yaAbrimos, setYaAbrimos] = useState(false); // para abrir una sola vez automática
+  const [showModal, setShowModal] = useState(false);
 
   const total = useMemo(
     () => preguntas.reduce((acc, p) => acc + (respuestas[p.id] ?? 0), 0),
     [respuestas]
   );
+
   const faltantes = useMemo(
     () => preguntas.filter((p) => respuestas[p.id] === undefined || respuestas[p.id] === null).length,
     [respuestas]
   );
 
-  useEffect(() => {
-    if (faltantes === 0 && !abrirModal && !yaAbrimos) {
-      setAbrirModal(true);
-      setYaAbrimos(true);
-    }
-  }, [faltantes, abrirModal, yaAbrimos]);
+  const data = rango(total);
 
   const setValor = (id: number, val: number) => {
     setRespuestas((prev) => ({ ...prev, [id]: val }));
   };
 
-  const reiniciar = () => {
-    setRespuestas({});
-    setYaAbrimos(false);
-  };
+  const reiniciar = () => setRespuestas({});
+
   const imprimir = () => window.print();
+
+  const exportarCSV = () => {
+    const encabezados = ["Pregunta", "Respuesta (2=Sí,1=Parcial,0=No)"];
+    const filas = preguntas.map((p) => [
+      p.texto.replace(/;/g, ","),
+      String(respuestas[p.id] ?? 0),
+    ]);
+    filas.push(["TOTAL", String(total)]);
+    const csv = [encabezados, ...filas].map((arr) => arr.join(";")).join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "cuestionario_KOP.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Abre modal automáticamente cuando terminas
+  useEffect(() => {
+    if (faltantes === 0) setShowModal(true);
+  }, [faltantes]);
+
+  // Formulario de contacto (modal)
+  const [sending, setSending] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  async function enviarContacto(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setMsg(null);
+    setSending(true);
+
+    const form = new FormData(e.currentTarget);
+    const nombre = String(form.get("nombre") || "");
+    const puesto = String(form.get("puesto") || "");
+    const empresa = String(form.get("empresa") || "");
+    const correo = String(form.get("correo") || "");
+    const celular = String(form.get("celular") || "");
+
+    try {
+      const body = {
+        servicio: "KOP - Diagnóstico de soporte de calidad",
+        total,
+        nombre, puesto, empresa, correo, celular,
+        respuestas: preguntas.map((p) => ({
+          id: p.id, texto: p.texto, val: respuestas[p.id] ?? 0,
+        })),
+      };
+
+      const r = await fetch("/api/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      if (!r.ok) {
+        const txt = await r.text().catch(() => "");
+        throw new Error(`Error ${r.status} ${txt}`);
+      }
+
+      setMsg("¡Enviado! Te contactaremos muy pronto.");
+      e.currentTarget.reset();
+    } catch (err: any) {
+      setMsg("No se pudo enviar. Intenta de nuevo.");
+    } finally {
+      setSending(false);
+    }
+  }
 
   return (
     <>
-      {/* Fondo con imagen */}
+      {/* Fondo + velo */}
       <div
-        className="fixed inset-0 -z-10 bg-[url('/Fondo.png')] bg-cover bg-center bg-no-repeat"
+        className="fixed inset-0 -z-10 bg-[url('/fondo_kop.png')] bg-cover bg-center bg-no-repeat"
         aria-hidden="true"
       />
-      {/* Velo (más transparente para ver MÁS el fondo) */}
-      <div className="fixed inset-0 -z-10 bg-white/40" aria-hidden="true" />
+      <div className="fixed inset-0 -z-10 bg-white/60" aria-hidden="true" />
 
       <main className="mx-auto max-w-3xl p-6">
+        {/* Header */}
         <header className="mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <img src="/quokka-logo.png" alt="Grupo Quokka" className="h-10 sm:h-12" />
+              <img
+                src="/KOP_logo.png"
+                alt="KOP Company"
+                className="h-12 sm:h-14"
+              />
             </div>
 
             <div className="flex gap-2 print:hidden">
               <button onClick={reiniciar} className="rounded-xl bg-white px-3 py-2 shadow hover:bg-neutral-50">
                 Reiniciar
+              </button>
+              <button onClick={exportarCSV} className="rounded-xl bg-white px-3 py-2 shadow hover:bg-neutral-50">
+                Exportar CSV
               </button>
               <button onClick={imprimir} className="rounded-xl bg-black px-3 py-2 text-white shadow hover:opacity-90">
                 Imprimir / PDF
@@ -328,15 +213,18 @@ export default function App() {
             </div>
           </div>
 
-          <h1 className="mt-4 text-2xl font-bold">¿Qué tan bueno es tu proveedor de transporte?</h1>
+          <h1 className="mt-4 text-2xl font-bold">
+            ¿Qué tan robusto es tu soporte de calidad en planta?
+          </h1>
           <p className="text-sm text-neutral-600">
-            ¡Encuentra las debilidades y fortalezas de tu servicio de transporte con este sencillo test!
+            Diagnóstico express para detectar brechas en contención, residentes/inspectores, retrabajos y gobierno 24/7.
           </p>
         </header>
 
+        {/* Estado superior */}
         <div className="mb-3 text-sm text-neutral-600">
-          Total: <span className="font-semibold">{total}</span> / 24 · Faltantes:{" "}
-          <span className="font-semibold">{faltantes}</span>
+          Total: <span className="font-semibold">{total}</span> / 24 ·{" "}
+          Faltantes: <span className="font-semibold">{faltantes}</span>
         </div>
 
         {/* Preguntas */}
@@ -364,10 +252,66 @@ export default function App() {
             </div>
           ))}
         </div>
-      </main>
 
-      {/* Modal automático al completar */}
-      <ModalContacto abierto={abrirModal} onClose={() => setAbrirModal(false)} total={total} />
+        {/* Modal de resultado */}
+        {showModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 print:hidden">
+            <div className="max-h-[85vh] w-full max-w-2xl overflow-auto rounded-2xl bg-white p-5 shadow-xl">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold">Resultado del diagnóstico</h2>
+                <button
+                  onClick={() => setShowModal(false)}
+                  className="rounded-full p-1 text-neutral-500 hover:bg-neutral-100"
+                  aria-label="Cerrar"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <ResultadoPanel data={data} total={total} />
+
+              <form onSubmit={enviarContacto} className="mt-5 grid gap-3">
+                <p className="text-sm text-neutral-600">
+                  ¿Quieres que te ayudemos a cerrar las brechas? Déjanos tus datos:
+                </p>
+
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <input name="nombre" required placeholder="Nombre*" className="rounded-xl border p-2" />
+                  <input name="puesto" placeholder="Puesto" className="rounded-xl border p-2" />
+                  <input name="empresa" placeholder="Empresa" className="rounded-xl border p-2" />
+                  <input name="correo" type="email" required placeholder="Correo*" className="rounded-xl border p-2" />
+                  <input name="celular" placeholder="Celular" className="rounded-xl border p-2 sm:col-span-2" />
+                </div>
+
+                <div className="mt-2 flex items-center gap-2">
+                  <button
+                    disabled={sending}
+                    className="rounded-xl bg-black px-4 py-2 text-white shadow hover:opacity-90 disabled:opacity-50"
+                  >
+                    {sending ? "Enviando..." : "Enviar"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={imprimir}
+                    className="rounded-xl bg-white px-3 py-2 shadow hover:bg-neutral-50"
+                  >
+                    Imprimir / PDF
+                  </button>
+                  <button
+                    type="button"
+                    onClick={reiniciar}
+                    className="rounded-xl bg-white px-3 py-2 shadow hover:bg-neutral-50"
+                  >
+                    Reiniciar cuestionario
+                  </button>
+                </div>
+
+                {msg && <p className="text-sm">{msg}</p>}
+              </form>
+            </div>
+          </div>
+        )}
+      </main>
     </>
   );
 }
