@@ -1,54 +1,89 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { Resend } from 'resend';
+import { Resend } from "resend";
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method === 'GET') return res.status(200).json({ ok: true });
-  if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Method not allowed' });
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Handler compatible con Vercel (Web API)
+export default async function handler(request: Request): Promise<Response> {
+  if (request.method !== "POST") {
+    return new Response("Method Not Allowed", { status: 405 });
+  }
 
   try {
-    const { nombre, puesto, empresa, correo, celular, total } = req.body ?? {};
+    const body = await request.json();
 
-    if (!nombre || !correo) {
-      return res.status(400).json({ ok: false, error: 'Faltan campos requeridos (nombre/correo)' });
-    }
+    const {
+      servicio,
+      total,
+      nombre,
+      puesto,
+      empresa,
+      correo,
+      celular,
+      respuestas,
+    } = body as {
+      servicio: string;
+      total: number;
+      nombre: string;
+      puesto?: string;
+      empresa?: string;
+      correo: string;
+      celular?: string;
+      respuestas: { id: number; texto: string; val: number }[];
+    };
 
-    const apiKey = process.env.RESEND_API_KEY;
-    const to = process.env.EMAIL_TO;
+    const rows = respuestas
+      .map(
+        (r) =>
+          `<tr><td style="padding:4px 8px;border:1px solid #eee;">${r.id}.</td><td style="padding:4px 8px;border:1px solid #eee;">${r.texto}</td><td style="padding:4px 8px;border:1px solid #eee;text-align:center;">${r.val}</td></tr>`
+      )
+      .join("");
 
-    if (!apiKey) return res.status(500).json({ ok: false, error: 'Falta RESEND_API_KEY' });
-    if (!to) return res.status(500).json({ ok: false, error: 'Falta EMAIL_TO' });
-
-    const resend = new Resend(apiKey);
-
-    const subject = `Nuevo lead (Total: ${total ?? '-'})`;
     const html = `
-      <h2>Nuevo contacto</h2>
+      <h2>${servicio}</h2>
+      <p><b>Total:</b> ${total} / 24</p>
+      <h3>Contacto</h3>
       <ul>
-        <li><b>Nombre:</b> ${nombre}</li>
-        <li><b>Puesto:</b> ${puesto ?? ''}</li>
-        <li><b>Empresa:</b> ${empresa ?? ''}</li>
-        <li><b>Correo:</b> ${correo}</li>
-        <li><b>Celular:</b> ${celular ?? ''}</li>
-        <li><b>Total:</b> ${total ?? ''}</li>
+        <li><b>Nombre:</b> ${nombre || "-"}</li>
+        <li><b>Puesto:</b> ${puesto || "-"}</li>
+        <li><b>Empresa:</b> ${empresa || "-"}</li>
+        <li><b>Correo:</b> ${correo || "-"}</li>
+        <li><b>Celular:</b> ${celular || "-"}</li>
       </ul>
+      <h3>Respuestas</h3>
+      <table style="border-collapse:collapse;border:1px solid #eee;">
+        <thead>
+          <tr>
+            <th style="padding:6px 8px;border:1px solid #eee;">#</th>
+            <th style="padding:6px 8px;border:1px solid #eee;text-align:left;">Pregunta</th>
+            <th style="padding:6px 8px;border:1px solid #eee;">Valor</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
     `;
 
-    const { error } = await resend.emails.send({
-      from: 'onboarding@resend.dev',  // remitente válido por defecto
+    const to = process.env.EMAIL_TO!;
+    const from = process.env.EMAIL_FROM!;
+
+    const sent = await resend.emails.send({
+      from,
       to,
-      subject,
+      subject: `Nuevo lead | ${servicio} | Total: ${total}`,
       html,
-      reply_to: correo,
+      reply_to: correo ? [correo] : undefined,
     });
 
-    if (error) {
-      // devolvemos detalle para que el frontend muestre algo útil
-      return res.status(500).json({ ok: false, error });
+    if ((sent as any).error) {
+      return new Response("Resend error", { status: 500 });
     }
 
-    return res.status(200).json({ ok: true });
+    return new Response(JSON.stringify({ ok: true }), {
+      headers: { "Content-Type": "application/json" },
+      status: 200,
+    });
   } catch (err: any) {
-    return res.status(500).json({ ok: false, error: err?.message || 'Error interno' });
+    return new Response("Bad Request", { status: 400 });
   }
 }
+
 
