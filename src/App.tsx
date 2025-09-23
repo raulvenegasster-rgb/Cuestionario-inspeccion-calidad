@@ -14,17 +14,17 @@ type Rango = {
 /* ---------- Preguntas (KOP) ---------- */
 const preguntas: Pregunta[] = [
   { id: 1, texto: "¿Tienes un proceso documentado de contención inicial (< 60 min) con segregación y etiquetado de producto sospechoso?" },
-  { id: 2, texto: "¿Cuentas con personal de inspección/residentes disponible 24/7 para picos, lanzamientos o eventos no planificados?" },
+  { id: 2, texto: "¿Cuentas con personal de inspección disponible 24/7 para picos, lanzamientos o eventos no planificados?" },
   { id: 3, texto: "¿Tu proveedor garantiza asistencia y puntualidad mediante transporte propio o esquemas de respaldo?" },
-  { id: 4, texto: "¿Operas sorting 100% y retrabajos con instrucciones aprobadas, muestras/fotos y trazabilidad por lote/turno?" },
-  { id: 5, texto: "¿Tienes residente de calidad con reporte diario (hallazgos, PPM, scrap/horas, costos) y comunicación con áreas clave?" },
-  { id: 6, texto: "¿Gestionas envío controlado (CSL1/CSL2) con criterios claros de entrada/salida y evidencia de cumplimiento?" },
-  { id: 7, texto: "¿Tu tiempo de reacción desde el aviso hasta presencia en línea es < 60 minutos en promedio?" },
-  { id: 8, texto: "¿El personal cuenta con entrenamiento y validación de habilidades (gages, ESD, seguridad, poka-yokes)?" },
-  { id: 9, texto: "¿Los retrabajos/ensamble controlado se realizan con herramientas/jigs validados, registros de torque/calibración y FTQ antes de liberar?" },
-  { id: 10, texto: "¿Existe escalamiento 24/7 con niveles (operativo, supervisor, gerencia) y SLAs/SLTs de respuesta definidos?" },
+  { id: 4, texto: "¿Cuentas con campañas de sorteo y/o retrabajos con instrucciones aprobadas, muestras/fotos y trazabilidad por turno?" },
+  { id: 5, texto: "¿Cuentas con residente de calidad con reporte diario (hallazgos, PPM, scrap/horas, costos) y comunicación con áreas clave?" },
+  { id: 6, texto: "¿Te han proporcionado la gestion de un control shipping(CSL1/CSL2) con criterios claros de entrada/salida cuando lo has requerido?" },
+  { id: 7, texto: "¿El tiempo de reacción desde el aviso hasta presencia en línea es < 60 minutos en promedio?" },
+  { id: 8, texto: "¿El personal cuenta con entrenamiento docuementado en matrices de habilidades?" },
+  { id: 9, texto: "¿Tu proveedor cuenta con equipos de medición para trabajos de inspección que lo requieran?" },
+  { id: 10, texto: "¿Tu proveedor te da respuesta las 24/7 y cuenta con por lo menos 3 niveles de escalamiento comprobados?" },
   { id: 11, texto: "¿Tu proveedor propone mejoras (reducción de PPM/costos) y da seguimiento hasta validar la efectividad?" },
-  { id: 12, texto: "¿Cuentas con REPSE vigente, ISO 9001 y cumplimiento de requisitos del cliente (inducción, EHS, NDA, acceso)?" },
+  { id: 12, texto: "¿Tu proveedor de sorteo cuenta con REPSE vigente, ISO 9001 y cumplimiento de requisitos del cliente (inducción, EHS, NDA, acceso)??" },
 ];
 
 /* ---------- Textos por rango ---------- */
@@ -217,7 +217,7 @@ export default function App() {
             ¿Qué tan robusto es tu soporte de calidad en planta?
           </h1>
           <p className="text-sm text-neutral-600">
-            Diagnóstico express para detectar brechas en contención, residentes/inspectores, retrabajos y gobierno 24/7.
+           Diagnóstico rápido para identificar brechas en: contención inicial, personal de inspección/residentes, retrabajos y atención 24/7.
           </p>
         </header>
 
